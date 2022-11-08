@@ -3,9 +3,25 @@
 
 <PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+<h1>Mainland Block Party 2022</h1>
 
-Welcome to your new app.
+<br />
+
+<h3>Add a Guest</h3>
+
+<EditForm Model="personModel" OnSubmit="@AddGuest">
+    <InputText placeholder="First Name" @bind-Value="personModel.FirstName"></InputText>
+
+    <InputText placeholder="Last Name" @bind-Value="personModel.LastName"></InputText>
+
+    <button class="btn btn-primary" type="submit">Add Guest</button>
+</EditForm>
+
+<br />
+
+<h3>Guest List</h3>
+
+Below is a list of invited guests;
 
 <ul>
     @foreach (var p in people)
@@ -16,10 +32,16 @@ Welcome to your new app.
 
 @code {
     List<PersonModel> people;
+    PersonModel personModel = new PersonModel();
 
     protected override async Task OnInitializedAsync()
     {
         people = await _mediator.Send(new GetPersonListQuery());
+    }
+
+    private async void AddGuest()
+    {
+        await _mediator.Send(new InsertPersonCommand(personModel.FirstName, personModel.LastName));
     }
 }
 
